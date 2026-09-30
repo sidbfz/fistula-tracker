@@ -6,6 +6,7 @@ node_modules/
 # Expo
 .expo/
 dist/
+dist-android/
 web-build/
 expo-env.d.ts
 
@@ -33,6 +34,10 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Local EAS signing credentials
+/credentials.json
+/credentials/
+
 # typescript
 *.tsbuildinfo
 
@@ -41,3 +46,16 @@ app-example
 # generated native folders
 /ios
 /android
+
+# IDE and agent-local metadata
+.idea/
+.claude/
+
+# Local UI and emulator debug captures
+/check-in-*.png
+/current-emulator-screen.png
+/keyboard-menu.png
+/window*.xml
+
+# Local release staging
+/release-artifacts/

@@ -1,35 +1,35 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { fonts, useTheme } from '@/src/components/ui';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarActiveTintColor: theme.ink,
+        tabBarInactiveTintColor: theme.subtle,
+        sceneStyle: { backgroundColor: theme.background },
+        tabBarStyle: {
+          height: 65 + insets.bottom,
+          paddingTop: 9,
+          paddingBottom: Math.max(insets.bottom, 11),
+          borderTopColor: theme.borderSoft,
+          borderTopWidth: 1,
+          backgroundColor: theme.surface,
+        },
+        tabBarLabelStyle: { fontFamily: fonts.semibold, fontSize: 13 },
+        tabBarItemStyle: { gap: 2 },
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'home' : 'home-outline'} color={color} size={size} /> }} />
+      <Tabs.Screen name="timeline" options={{ title: 'Recovery', tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'time' : 'time-outline'} color={color} size={size} /> }} />
+      <Tabs.Screen name="notes" options={{ title: 'Journal', tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'book' : 'book-outline'} color={color} size={size} /> }} />
+      <Tabs.Screen name="more" options={{ title: 'More', tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'ellipsis-horizontal-circle' : 'ellipsis-horizontal-circle-outline'} color={color} size={size} /> }} />
+      <Tabs.Screen name="check-in" options={{ href: null }} />
     </Tabs>
   );
 }

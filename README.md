@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# Fistula Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![Fistula Tracker — a private space for fistula recovery](store-listing/feature-graphic.png)
 
-## Get started
+An Android-first, local-first companion for keeping the practical parts of anal fistula recovery organized in one private place.
 
-1. Install dependencies
+[**Download the latest Android APK**](https://github.com/sidbfz/fistula-tracker/releases/latest/download/Fistula-Tracker-1.0.2.apk)
 
-   ```bash
-   npm install
-   ```
+> The Google Play production listing is still pending, so this build is distributed directly through GitHub. Android may ask you to allow installation from your browser or Files app. The APK is release-signed; only download it from this repository's Releases page.
 
-2. Start the app
+## What it helps with
 
-   ```bash
-   npx expo start
-   ```
+- Daily recovery check-ins and an editable recovery timeline
+- Medicine schedules, local reminders, and Taken/Skipped/Postponed history
+- A private wound-photo timeline stored inside the app's local storage
+- A recovery journal and a personal “When I recover” list
+- A customizable routine and recovery essentials checklist
+- Optional device authentication and complete local-data deletion
+- Optional one-time support through RevenueCat; every recovery feature stays free
 
-In the output, you'll find options to open the app in a
+## Screenshots
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<p align="center">
+  <img src="store-listing/play-store-screenshots/01-home-play-store.png" width="30%" alt="Fistula Tracker home screen" />
+  <img src="store-listing/play-store-screenshots/02-check-in-play-store.png" width="30%" alt="Daily recovery check-in" />
+  <img src="store-listing/play-store-screenshots/03-medicines-play-store.png" width="30%" alt="Medicine reminders" />
+</p>
+<p align="center">
+  <img src="store-listing/play-store-screenshots/04-timeline-play-store.png" width="30%" alt="Recovery timeline" />
+  <img src="store-listing/play-store-screenshots/05-journal-play-store.png" width="30%" alt="Private recovery journal" />
+  <img src="store-listing/play-store-screenshots/06-private-photos-play-store.png" width="30%" alt="Private wound photo timeline" />
+</p>
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Privacy by design
 
-## Get a fresh project
+- No account, backend, cloud sync, remote health storage, or health-data analytics
+- Structured recovery data is stored in the on-device `recovery.db` SQLite database
+- Wound photos are copied into the app-private document directory
+- Local device notifications are used for reminders; no remote push token is requested
+- Settings can permanently delete structured data, reminders, and private photos
+- Purchases use an anonymous RevenueCat identifier; recovery records, medicine names, journal entries, reminders, and photos are never sent with a purchase
 
-When you're ready, run:
+Read the complete [privacy policy](PRIVACY_POLICY.md).
+
+## Important medical notice
+
+Fistula Tracker is a personal organization tool, not a diagnostic or medical-advice service. It does not analyze photos, detect infection, score healing, decide whether recovery is normal, recommend treatment, calculate a safe next dose, or replace advice from a qualified healthcare professional.
+
+## Built with
+
+- Expo 54 and React Native
+- TypeScript and Expo Router
+- Expo SQLite for on-device structured data
+- Expo Notifications for local reminders
+- RevenueCat for optional one-time support
+
+## Run locally
+
+Requirements: Node.js, npm, and an Android development environment.
 
 ```bash
-npm run reset-project
+npm install
+npm run android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Expo Go can exercise most flows and RevenueCat's preview purchase API. Real Google Play purchases require a native Android development or release build.
 
-## Learn more
+## Environment setup
 
-To learn more about developing your project with Expo, look at the following resources:
+Copy `.env.example` to `.env.local` and add your RevenueCat public SDK key. Never commit local environment files or signing credentials.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+For RevenueCat, create the non-consumable product `fistula_tracker_one_time_support`, attach it to the `supporter` entitlement, and add it to the `default` offering using the predefined Lifetime package type. “Lifetime” is RevenueCat's technical package category; the app presents it as one-time support.
 
-## Join the community
+## Verification
 
-Join our community of developers creating universal apps.
+```bash
+npm run verify
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The verification command runs the automated tests, TypeScript checks, linting, Expo dependency alignment checks, and Expo Doctor.

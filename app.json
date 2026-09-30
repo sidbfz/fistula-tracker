@@ -1,25 +1,31 @@
 {
   "expo": {
-    "name": "fistula_app",
-    "slug": "fistula_app",
-    "version": "1.0.0",
+    "name": "Fistula Tracker",
+    "slug": "fistula-tracker",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/fistula_tracker_logo__3_-removebg-preview.png",
     "scheme": "fistulaapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "tech.sidfz.fistulatracker"
     },
     "android": {
+      "versionCode": 5,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#F4F1EB",
+        "foregroundImage": "./assets/images/android-icon-foreground-padded.png",
+        "backgroundImage": "./assets/images/android-icon-background.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "tech.sidfz.fistulatracker",
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
       "output": "static",
@@ -33,16 +39,35 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#F4F1EB"
         }
-      ]
+      ],
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Fistula Tracker to select a wound photo that will be copied into private app storage.",
+          "cameraPermission": "Allow Fistula Tracker to take a wound photo for your private recovery timeline.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Fistula Tracker to use Face ID to protect your private recovery information."
+        }
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8f7ad137-498a-43ab-8f8e-d50270a5a873"
+      }
     }
   }
 }
