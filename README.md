@@ -8,6 +8,12 @@ An Android-first, local-first companion for keeping the practical parts of anal 
 
 > The Google Play production listing is still pending, so this build is distributed directly through GitHub. Android may ask you to allow installation from your browser or Files app. The APK is release-signed; only download it from this repository's Releases page.
 
+## Video demo
+
+[![Watch the Fistula Tracker demo](https://img.youtube.com/vi/yNceIYF8Y7w/maxresdefault.jpg)](https://www.youtube.com/watch?v=yNceIYF8Y7w)
+
+[**Watch the demo on YouTube**](https://www.youtube.com/watch?v=yNceIYF8Y7w)
+
 ## What it helps with
 
 - Daily recovery check-ins and an editable recovery timeline
