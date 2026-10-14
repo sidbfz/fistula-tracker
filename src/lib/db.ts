@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 import { DATABASE_VERSION, pendingMigrationVersions } from '@/src/lib/migrations';
+import { RESET_DATABASE_SQL } from '@/src/lib/db-reset';
 
 import type {
   DailyLog,
@@ -190,9 +191,12 @@ export async function initializeDatabase() {
   }
 
   if (pendingMigrations.includes(4)) {
-    await db.execAsync(`
-      ALTER TABLE medications ADD COLUMN weekdays TEXT NOT NULL DEFAULT '1,2,3,4,5,6,7';
-    `);
+    // Earlier full resets set user_version to zero without dropping tables.
+    // Recover those installations rather than failing on an existing column.
+    const medicationColumns = await db.getAllAsync<{ name: string }>('PRAGMA table_info(medications)');
+    if (!medicationColumns.some((column) => column.name === 'weekdays')) {
+      await db.execAsync("ALTER TABLE medications ADD COLUMN weekdays TEXT NOT NULL DEFAULT '1,2,3,4,5,6,7';");
+    }
   }
 
   if (pendingMigrations.includes(5)) {
@@ -669,30 +673,7 @@ export async function restoreEssentialDefaults() {
 export async function clearStructuredData() {
   const db = await getDatabase();
   await db.withTransactionAsync(async () => {
-    await db.execAsync(`
-      DELETE FROM daily_logs;
-      DELETE FROM wound_photos;
-      DELETE FROM journal_entries;
-      DELETE FROM recovery_items;
-      DELETE FROM medication_events;
-      DELETE FROM medication_times;
-      DELETE FROM medications;
-      DELETE FROM routine_events;
-      DELETE FROM routine_tasks;
-      DELETE FROM essential_items;
-      DELETE FROM recovery_profile;
-      DELETE FROM settings WHERE key IN (
-        'display_name',
-        'onboarding_recurrence',
-        'onboarding_procedure_count',
-        'onboarding_impacts',
-        'notification_wording',
-        'app_color_scheme'
-      );
-      UPDATE reminders SET enabled = 0, notification_id = NULL;
-      UPDATE settings SET value = 'false' WHERE key IN ('onboarding_complete', 'biometric_enabled');
-      PRAGMA user_version = 0;
-    `);
+    await db.execAsync(RESET_DATABASE_SQL);
   });
 }
 

@@ -10,6 +10,7 @@ Improved check-in scrolling for large text and longer medicine lists.
 Improved scrolling and keyboard access during setup.
 Preserved journal entries and unfinished check-ins when managing medicines.
 Fixed the selected photo opening at the wrong position.
+Fixed Delete all app data and startup after an earlier failed reset.
 Updated privacy information.
 </en-US>
 ```

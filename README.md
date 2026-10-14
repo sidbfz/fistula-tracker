@@ -63,7 +63,7 @@ Fistula Tracker is a personal organization tool, not a diagnostic or medical-adv
 
 ## Run locally
 
-Requirements: Node.js, npm, and an Android development environment.
+Requirements: Node.js 24 or newer (the regression tests use Node's SQLite API), npm, and an Android development environment.
 
 ```bash
 npm install

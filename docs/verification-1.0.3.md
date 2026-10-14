@@ -6,7 +6,8 @@ This records developer checks, not external tester engagement or production appr
 
 ## Automated checks
 
-- `npm run verify` passed: 23 tests, TypeScript, lint, Expo dependency alignment and all 18 Expo Doctor checks.
+- `npm run verify` passed: 25 tests, TypeScript, lint, Expo dependency alignment and all 18 Expo Doctor checks.
+- SQLite regression tests execute full resets with foreign keys enabled, including removing unknown settings and replaying initialization after repeated resets.
 - The feedback URI tests verify its recipient, draft content and encoding, including protection against extra mail parameters.
 - Existing tests cover local dates, reminders, medication scheduling, weekday selection and migration ordering.
 - The public policy document matches the sections displayed in the app.
@@ -33,6 +34,8 @@ Device: Pixel 7 AVD, Android 17. Testing used a separately signed QA package, `t
 - Reached all six check-in stages at Android font scale 1.4 with the update action reachable. Restored the emulator's original font scale of 1.0 afterward.
 - Opened Send feedback and verified version 1.0.3/build 6 and the operating-system version. No email was sent.
 - Observed the existing bottom navigation above the gesture-navigation area with the keyboard dismissed.
+- Reproduced the earlier full-reset duplicate-column failure. Installed the corrected build over that failed-reset state and verified startup returned to onboarding without a database error.
+- Executed Delete all app data again in the QA package and verified the app returned to onboarding with an empty name field. Only disposable QA records were removed.
 
 ## Checks still needed from testers
 
