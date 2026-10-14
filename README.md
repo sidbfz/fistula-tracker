@@ -22,7 +22,8 @@ An Android-first, local-first companion for keeping the practical parts of anal 
 - A recovery journal and a personal “When I recover” list
 - A customizable routine and recovery essentials checklist
 - Optional device authentication and complete local-data deletion
-- Optional one-time support through RevenueCat; every recovery feature stays free
+- Every feature is free, with no purchases or subscriptions in version 1.0.3 onward
+- Optional email feedback and clear app version details
 
 ## Screenshots
 
@@ -44,7 +45,8 @@ An Android-first, local-first companion for keeping the practical parts of anal 
 - Wound photos are copied into the app-private document directory
 - Local device notifications are used for reminders; no remote push token is requested
 - Settings can permanently delete structured data, reminders, and private photos
-- Purchases use an anonymous RevenueCat identifier; recovery records, medicine names, journal entries, reminders, and photos are never sent with a purchase
+- No purchase SDK or automatic purchase-data collection in version 1.0.3 onward
+- Feedback opens an editable email draft; no recovery records, photos, logs or device identifiers are attached automatically
 
 Read the complete [privacy policy](PRIVACY_POLICY.md).
 
@@ -58,7 +60,6 @@ Fistula Tracker is a personal organization tool, not a diagnostic or medical-adv
 - TypeScript and Expo Router
 - Expo SQLite for on-device structured data
 - Expo Notifications for local reminders
-- RevenueCat for optional one-time support
 
 ## Run locally
 
@@ -69,13 +70,13 @@ npm install
 npm run android
 ```
 
-Expo Go can exercise most flows and RevenueCat's preview purchase API. Real Google Play purchases require a native Android development or release build.
+Expo Go can exercise most flows. Use a native Android development or release build to verify device authentication and local reminders.
 
 ## Environment setup
 
-Copy `.env.example` to `.env.local` and add your RevenueCat public SDK key. Never commit local environment files or signing credentials.
+No API keys or remote services are required. Never commit local environment files or signing credentials.
 
-For RevenueCat, create the non-consumable product `fistula_tracker_one_time_support`, attach it to the `supporter` entitlement, and add it to the `default` offering using the predefined Lifetime package type. “Lifetime” is RevenueCat's technical package category; the app presents it as one-time support.
+The demo video and the currently published GitHub APK show the earlier 1.0.2 version. Version 1.0.3 removes its optional supporter purchase. See the privacy policy for how earlier purchase records are handled.
 
 ## Verification
 

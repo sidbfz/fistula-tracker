@@ -1,11 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
-import { Alert, Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AnimatedStage, Button, ChoiceRow, Divider, EmphasisText, EmptyState, Field, fonts, ProgressIndicator, Screen, SelectionFade, useTheme } from '@/src/components/ui';
 import { formatDate, todayISO } from '@/src/lib/date';
-import { deleteDailyLog, listDailyLogs, listMedicationEvents, listMedications, saveDailyLog, saveJournalForDate, saveMedicationEvent } from '@/src/lib/db';
+import { deleteDailyLog, getJournalForDate, listDailyLogs, listMedicationEvents, listMedications, saveDailyLog, saveJournalForDate, saveMedicationEvent } from '@/src/lib/db';
 import { hasRecordedStatus, localISOTimestamp, scheduledTimestamp } from '@/src/lib/schedule';
 import { includesDate, parseWeekdays } from '@/src/lib/weekdays';
 import type { DailyLog, DailyLogInput, MedicationEvent, MedicationWithTimes } from '@/src/types';
@@ -27,18 +27,18 @@ export default function CheckInScreen() {
   const [step, setStep] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [journalFocused, setJournalFocused] = useState(false);
+  const hasUnsavedChanges = useRef(false);
   const editingPast = form.log_date !== todayISO();
   const existingLog = logs.find((row) => row.log_date === form.log_date);
 
   const load = useCallback(async () => {
-    const [rows, savedMedications, savedMedicationEvents] = await Promise.all([listDailyLogs(), listMedications(), listMedicationEvents()]);
+    const [rows, savedMedications, savedMedicationEvents, todayJournal] = await Promise.all([listDailyLogs(), listMedications(), listMedicationEvents(), getJournalForDate(todayISO())]);
     setLogs(rows);
     setMedications(savedMedications);
     setMedicationEvents(savedMedicationEvents);
-    if (!editingPast) {
+    if (!editingPast && !hasUnsavedChanges.current) {
       const today = rows.find((row) => row.log_date === todayISO());
-      setForm(today ? { ...today } : blankLog());
+      setForm(today ? { ...today, notes: todayJournal?.body ?? today.notes } : { ...blankLog(), notes: todayJournal?.body ?? '' });
     }
   }, [editingPast]);
 
@@ -51,6 +51,7 @@ export default function CheckInScreen() {
   }), [checkInDate, medications]);
 
   function edit(log: DailyLog) {
+    hasUnsavedChanges.current = false;
     setSelectedMedicationKeys([]);
     setForm({ ...log });
     setStep(0);
@@ -58,6 +59,7 @@ export default function CheckInScreen() {
   }
 
   function change<K extends keyof DailyLogInput>(key: K, value: DailyLogInput[K]) {
+    hasUnsavedChanges.current = true;
     setForm((current) => ({ ...current, [key]: value }));
   }
 
@@ -76,6 +78,7 @@ export default function CheckInScreen() {
         const alreadyRecorded = hasRecordedStatus(medicationEvents.filter((event) => event.medication_id === item.medication.id), scheduledFor, checkInDate);
         if (!alreadyRecorded && scheduledFor) await saveMedicationEvent({ medication_id: item.medication.id, medication_name: item.medication.name, status: 'taken', occurred_at: localISOTimestamp(new Date(scheduledFor)), scheduled_for: scheduledFor });
       }
+      hasUnsavedChanges.current = false;
       await load();
       router.replace('/(tabs)');
     } catch (reason) {
@@ -90,6 +93,7 @@ export default function CheckInScreen() {
       { text: 'Cancel', style: 'cancel' },
       { text: 'Delete', style: 'destructive', onPress: () => void (async () => {
         await deleteDailyLog(log.id);
+        hasUnsavedChanges.current = false;
         if (form.log_date === log.log_date) setForm(blankLog());
         await load();
       })() },
@@ -132,7 +136,7 @@ export default function CheckInScreen() {
   }
 
   return (
-    <Screen scroll={step === totalSteps - 1}>
+    <Screen>
       <View style={styles.flow}>
         <View style={styles.top}>
           <View style={styles.topRow}>
@@ -231,20 +235,8 @@ export default function CheckInScreen() {
                 multiline
                 value={form.notes}
                 onChangeText={(notes) => change('notes', notes)}
-                onFocus={() => setJournalFocused(true)}
-                onBlur={() => setJournalFocused(false)}
                 placeholder="Write something, if you want..."
               />
-              {journalFocused ? (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Done typing"
-                  onPress={Keyboard.dismiss}
-                  style={({ pressed }) => [styles.dismissKeyboard, { borderColor: theme.border }, pressed && styles.pressed]}>
-                  <Ionicons name="chevron-down" size={17} color={theme.muted} />
-                  <Text style={[styles.dismissKeyboardText, { color: theme.muted }]}>Done typing</Text>
-                </Pressable>
-              ) : null}
             </>
           ) : null}
         </AnimatedStage>
@@ -291,8 +283,6 @@ const styles = StyleSheet.create({
   medicationHint: { fontFamily: fonts.regular, fontSize: 14, lineHeight: 19 },
   checkbox: { width: 30, height: 30, borderRadius: 10, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   footer: { gap: 11, paddingBottom: 4 },
-  dismissKeyboard: { alignSelf: 'flex-end', minHeight: 40, flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: 12, paddingHorizontal: 13 },
-  dismissKeyboardText: { fontFamily: fonts.medium, fontSize: 15 },
   centerLink: { alignItems: 'center', paddingVertical: 5 },
   deleteText: { fontFamily: fonts.medium, fontSize: 15 },
   pressed: { opacity: 0.55 },

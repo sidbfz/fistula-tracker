@@ -345,6 +345,11 @@ export async function listJournalEntries() {
   return db.getAllAsync<JournalEntry>('SELECT * FROM journal_entries ORDER BY entry_date DESC, created_at DESC');
 }
 
+export async function getJournalForDate(entryDate: string) {
+  const db = await getDatabase();
+  return db.getFirstAsync<JournalEntry>('SELECT * FROM journal_entries WHERE entry_date = ?', entryDate);
+}
+
 export async function saveJournalEntry(entryDate: string, body: string) {
   const db = await getDatabase();
   await db.withTransactionAsync(async () => {

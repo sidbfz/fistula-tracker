@@ -15,7 +15,6 @@ import 'react-native-reanimated';
 
 import { Button, fonts, useTheme } from '@/src/components/ui';
 import { AppProvider, useApp } from '@/src/context/app-context';
-import { configureRevenueCat } from '@/src/lib/revenuecat';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
@@ -116,11 +115,6 @@ export default function RootLayout() {
     InstrumentSerif_400Regular_Italic,
     ...Ionicons.font,
   });
-
-  useEffect(() => {
-    // A missing purchase key never blocks the local recovery experience.
-    void configureRevenueCat().catch(() => undefined);
-  }, []);
 
   return (
     <AppProvider>

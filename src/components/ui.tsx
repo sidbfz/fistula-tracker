@@ -154,6 +154,13 @@ const stageExiting = FadeOut.duration(140).reduceMotion(ReduceMotion.System);
 
 export function Screen({ children, scroll = true }: PropsWithChildren<{ scroll?: boolean }>) {
   const theme = useTheme();
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
   const inner = <Animated.View entering={screenEntering} style={[styles.screenInner, !scroll && styles.flex]}>{children}</Animated.View>;
   const content = scroll ? (
     <ScrollView
@@ -169,8 +176,16 @@ export function Screen({ children, scroll = true }: PropsWithChildren<{ scroll?:
   );
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.background }]} edges={['top']}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        {content}
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.flex}>{content}</View>
+        {keyboardVisible ? (
+          <View style={[styles.keyboardToolbar, { backgroundColor: theme.surface, borderTopColor: theme.borderSoft }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Hide keyboard" onPress={Keyboard.dismiss} style={styles.keyboardDismiss}>
+              <Ionicons name="chevron-down" size={18} color={theme.ink} />
+              <Text style={[styles.keyboardDismissText, { color: theme.ink }]}>Done typing</Text>
+            </Pressable>
+          </View>
+        ) : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -807,6 +822,9 @@ const styles = StyleSheet.create({
   safe: { flex: 1, overflow: 'hidden' },
   screenContent: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: 116, flexGrow: 1 },
   screenInner: { gap: spacing.md },
+  keyboardToolbar: { borderTopWidth: 1, paddingHorizontal: spacing.lg, alignItems: 'flex-end' },
+  keyboardDismiss: { minHeight: 44, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  keyboardDismissText: { fontFamily: fonts.semibold, fontSize: 16 },
   emphasisEditorial: { fontFamily: fonts.serif, fontSize: 46, lineHeight: 54, letterSpacing: -0.8 },
   serifGuard: { fontFamily: fonts.serif },
   emphasisItalic: { fontFamily: fonts.serifItalic, fontWeight: '400' },

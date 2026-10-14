@@ -172,6 +172,7 @@ export default function PhotosScreen() {
               <FlatList
                 ref={listRef}
                 data={photos}
+                initialScrollIndex={currentIndex}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}

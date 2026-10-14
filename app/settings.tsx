@@ -9,9 +9,11 @@ import { clearRecoveryHistory, clearStructuredData, deleteAllPhotoRecords, initi
 import { cancelAllReminders, cancelReminder } from '@/src/lib/notifications';
 import { deleteAllPrivatePhotos } from '@/src/lib/photos';
 import { notificationIdsForDeletion } from '@/src/lib/reminder-state';
+import { getAppDetails } from '@/src/lib/app-info';
 
 export default function SettingsScreen() {
   const theme = useTheme();
+  const appDetails = getAppDetails();
   const { biometricEnabled, darkModeEnabled, setBiometricEnabled, setDarkModeEnabled, refresh } = useApp();
   const [dataBusy, setDataBusy] = useState(false);
   const [biometricBusy, setBiometricBusy] = useState(false);
@@ -109,6 +111,7 @@ export default function SettingsScreen() {
   }
 
   const aboutLinks = [
+    { title: 'Send feedback', subtitle: 'Report a problem or suggest an improvement', icon: 'mail-outline' as const, onPress: () => router.push('/feedback') },
     { title: 'My story', subtitle: 'Read the note that started this', icon: 'heart-outline' as const, onPress: () => router.push({ pathname: '/onboarding', params: { from: 'settings' } }) },
     { title: 'Recovery setup', subtitle: 'Change your name, path, or current stage', icon: 'person-outline' as const, onPress: () => router.push({ pathname: '/setup', params: { from: 'settings' } }) },
     { title: 'Daily routine', subtitle: 'Change tasks, times, and quiet reminders', icon: 'list-outline' as const, onPress: () => router.push('/reminders') },
@@ -122,7 +125,7 @@ export default function SettingsScreen() {
       <View style={[styles.privacyStatement, { borderTopColor: theme.borderSoft, borderBottomColor: theme.borderSoft }]}>
         <Ionicons name="shield-checkmark-outline" size={26} color={theme.ink} />
         <Text style={[styles.privacyTitle, { color: theme.ink }]}>Private by default.</Text>
-        <Text style={[styles.paragraph, { color: theme.muted }]}>No account, cloud sync, advertising, or behavioral analytics. Recovery records live locally; optional purchases share only purchase information with the app store and RevenueCat.</Text>
+        <Text style={[styles.paragraph, { color: theme.muted }]}>No account, cloud sync, advertising, analytics, or purchases. Your recovery records stay on this device. Every feature is free.</Text>
       </View>
 
       <Text style={[styles.sectionTitle, { color: theme.ink }]}>Appearance</Text>
@@ -144,7 +147,7 @@ export default function SettingsScreen() {
         <Ionicons name="document-text-outline" size={21} color={theme.muted} />
         <View style={styles.settingCopy}>
           <Text style={[styles.rowTitle, { color: theme.ink }]}>Privacy Policy</Text>
-          <Text style={[styles.rowSubtitle, { color: theme.muted }]}>Read how health data, permissions, and third-party purchase services are handled.</Text>
+          <Text style={[styles.rowSubtitle, { color: theme.muted }]}>Read how local records, permissions, and optional feedback are handled.</Text>
         </View>
         <Ionicons name="chevron-forward" size={18} color={theme.subtle} />
       </Pressable>
@@ -195,6 +198,8 @@ export default function SettingsScreen() {
           </View>
         ))}
       </View>
+
+      <Text selectable style={[styles.infoText, { color: theme.subtle }]}>Fistula Tracker · Version {appDetails.version} · Build {appDetails.build}</Text>
 
       <View style={[styles.safety, { borderTopColor: theme.borderSoft }]}>
         <Text style={[styles.safetyTitle, { color: theme.ink }]}>A companion, not a clinician.</Text>

@@ -10,7 +10,6 @@ const items = [
   { title: 'Recovery essentials', subtitle: 'Patient-shared ideas and your own list', icon: 'bag-handle-outline' as const, route: '/essentials' as const },
   { title: 'Private photos', subtitle: 'A discreet visual timeline', icon: 'lock-closed-outline' as const, route: '/photos' as const },
   { title: 'When I Recover', subtitle: 'Things worth getting better for', icon: 'sparkles-outline' as const, route: '/recovery-list' as const },
-  { title: 'Support the app', subtitle: 'Optional support; recovery tools stay free', icon: 'heart-outline' as const, route: '/support' as const },
   { title: 'Settings & privacy', subtitle: 'App lock, your data, and the story', icon: 'shield-checkmark-outline' as const, route: '/settings' as const },
 ];
 

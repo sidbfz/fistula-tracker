@@ -362,7 +362,7 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <Screen scroll={step === 'medicine'}>
+    <Screen>
       <View style={styles.shell}>
         <View style={styles.top}>
           <View style={styles.topRow}>

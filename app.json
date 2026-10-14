@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fistula Tracker",
     "slug": "fistula-tracker",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/fistula_tracker_logo__3_-removebg-preview.png",
     "scheme": "fistulaapp",
@@ -13,7 +13,7 @@
       "bundleIdentifier": "tech.sidfz.fistulatracker"
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "backgroundColor": "#F4F1EB",
         "foregroundImage": "./assets/images/android-icon-foreground-padded.png",
